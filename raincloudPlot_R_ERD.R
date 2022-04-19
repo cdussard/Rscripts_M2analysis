@@ -50,7 +50,7 @@ box<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+
   theme_classic()+
   scale_x_discrete( expand = c(0.25, 0.0),labels=levels(data$condition))+
   theme(legend.position = "none",axis.line=element_blank())+theme(legend.position = "none")
-box<-box+theme(axis.title.y = element_blank(),axis.title.x = element_blank())
+box<-box+theme(axis.title.y = element_blank(),axis.title.x = element_blank(),axis.text.y=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank())
 box
   
 data$condition <- factor(ANOVA_12_15Hz_C3_short$condition , levels=c("pendule", "main", "mainIllusion"))
@@ -66,7 +66,7 @@ violin<-ggplot(data, aes(x=ERD,fill = condition)) +
   coord_flip()+
   theme_bw()
 violin<-violin+theme_classic()#remove box around plot
-violin<-violin+theme(axis.title.y = element_blank(),axis.line=element_blank(),axis.title.x = element_blank())
+violin<-violin+theme(axis.title.y = element_blank(),axis.line=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.text.x=element_blank(),axis.title.x = element_blank(),axis.ticks.y=element_blank())
 #+theme(legend.position = "none")
 #taille egale
 plot_grid(t, violin, labels=c("A", "B"), ncol = 2, nrow = 1)
