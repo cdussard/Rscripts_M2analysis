@@ -77,14 +77,37 @@ data<-ANOVA_12_15Hz_C3_short
 #order conditions
 data$condition <- factor(ANOVA_12_15Hz_C3_short$condition , levels=c("pendule", "main", "mainIllusion"))
 data$condition <- as.integer(factor(ANOVA_12_15Hz_C3_short$condition))
+
+#choose the colors
+library(Polychrome)
+set.seed(935234)
+P23 <- createPalette(30, c("#FF0000", "#00FF00", "#0000FF"), range = c(30, 80))
+swatch(P23)
+P23 <- sortByHue(P23)
+P23 <- as.vector(t(matrix(P23, ncol=4)))
+swatch(P23)
+names(P23) <- NULL
+#alphabet
+library(pals)
+scale_fill_manual(values=as.vector(alphabet(26)))
+#glasbey
+scale_fill_manual(values=as.vector(pal.bands(glasbey(26))))
+
+
 # Code to plot Raincloud and boxplot ,fill=condition
 t<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+
-  scale_x_discrete( expand = c(0.01, 0.01),labels=levels(data$condition))+
+  scale_x_discrete( expand = c(0.05, 0.01),labels=levels(data$condition))+
   geom_jitter(alpha = 0.8,width = 0.01)+
   guides(fill = "none",col="none")+
   #theme(legend.position = "none")+
   geom_boxplot( width = .15,  outlier.shape = NA,alpha=0.0,position =position_nudge(x = 0, y = 0) )+
-  geom_line(data=data,aes(group=sujet,color=factor(sujet)))#data = ANOVA_12_15Hz_C3_short, aes(x=condition,y=ERD))
+  geom_line(data=data,aes(group=sujet,color=factor(sujet)))+
+  #scale_color_manual(values=glasbey(23))+
+  scale_color_manual(values = P23)+
+                      theme_bw()+theme_classic()
+
+t
+#data = ANOVA_12_15Hz_C3_short, aes(x=condition,y=ERD))
 
 
 data$condition <- factor(ANOVA_12_15Hz_C3_short$condition , levels=c("pendule", "main", "mainIllusion"))
@@ -93,18 +116,23 @@ violin<-violin+ coord_cartesian(ylim = c(min(data$ERD), max(data$ERD)))#coord_fl
 #violin + simple
 mu <- ddply(data$ERD, "condition", summarise, grp.mean=mean(ERD))
 med <- ddply(data$ERD, "condition", summarise, grp.median= median(ERD))
-viol<-ggplot(data, aes(x=ERD,fill = condition)) +
+violin<-ggplot(data, aes(x=ERD,fill = condition)) +
   geom_density(alpha=0.4)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=condition),
-             linetype="dashed")+coord_flip()+theme(axis.title.y=element_blank())#+theme(legend.position = "none")
-viol
+             linetype="dashed")+
+  coord_flip()+
+  theme_bw()
+violin<-violin+theme_classic()#remove box around plot
+violin<-violin+theme(axis.title.y = element_blank())
+#+theme(legend.position = "none")
 #taille egale
-plot_grid(t, viol, labels=c("A", "B"), ncol = 2, nrow = 1)
+plot_grid(t, violin, labels=c("A", "B"), ncol = 2, nrow = 1)
 #specifier les tailles
 ggdraw() +
   draw_plot(t,0, 0, 0.73, 1) +
-  draw_plot(viol, 0.73, 0, .3, 1)+
-  draw_plot_label(c("Individual points", "Distribution"), c(0, 0.7), c(1, 1), size = 12)
+  draw_plot(violin, 0.73, 0, .3, 1)+
+  draw_plot_label(c("Individual points", "Distribution"), c(0, 0.7), c(0.98,0.98), size = 12)
+
 
 #cowplot
 #plot_grid(lp, bp, labels=c("A", "B","C"), ncol = 3, nrow = 1)
