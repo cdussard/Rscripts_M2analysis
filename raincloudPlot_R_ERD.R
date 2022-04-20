@@ -1,13 +1,11 @@
 library(readr)
 library(ggplot2)
+#library("plyr")
+library("dplyr")
+library(Polychrome)
 ANOVA_12_15Hz_C3_short <- read_csv("//l2export/iss02.cenir/analyse/meeg/BETAPARK/code/PYTHON_SCRIPTS/M2data_analysis/analyse_M2/data/Jasp_anova/ANOVA_12_15Hz_C3_short.csv")
 
-
 #raincloud plot
-
-library("ggplot2")
-library("plyr")
-library("dplyr")
 
 data<-ANOVA_12_15Hz_C3_short
 #order conditions
@@ -15,12 +13,12 @@ data$condition <- factor(ANOVA_12_15Hz_C3_short$condition , levels=c("pendule", 
 data$condition <- as.integer(factor(ANOVA_12_15Hz_C3_short$condition))
 
 #choose the colors
-library(Polychrome)
+
 set.seed(935234)
 P23 <- createPalette(30, c("#FF0000", "#00FF00", "#0000FF"), range = c(30, 80))
 swatch(P23)
 P23 <- sortByHue(P23)
-P23 <- as.vector(t(matrix(P23, ncol=4)))
+P23 <- as.vector(t(matrix(P23, ncol=1)))
 swatch(P23)
 names(P23) <- NULL
 # #alphabet
@@ -33,10 +31,10 @@ names(P23) <- NULL
 # Code to plot Raincloud and boxplot ,fill=condition
 t<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+
   scale_x_discrete( expand = c(0.03, 0.01),labels=levels(data$condition))+
-  geom_jitter(data=data,aes(color=factor(sujet)),alpha = 0.8,width = 0.01)+
+  geom_jitter(data=data,size=5,aes(color=factor(sujet)),alpha = 0.8,width = 0.01)+
   guides(fill = "none",col="none")+
   #theme(legend.position = "none")+
-  geom_line(data=data,aes(group=sujet,color=factor(sujet)))+
+  geom_line(data=data,size=1.05,aes(group=sujet,color=factor(sujet)))+
   #geom_boxplot( width = .15,  outlier.shape = NA,alpha=0.0,position =position_nudge(x = 0, y = 0) )
   #scale_color_manual(values=glasbey(23))+
   scale_color_manual(values = P23)+
@@ -54,11 +52,12 @@ box<-box+theme(axis.title.y = element_blank(),axis.title.x = element_blank(),axi
 box
   
 data$condition <- factor(ANOVA_12_15Hz_C3_short$condition , levels=c("pendule", "main", "mainIllusion"))
-violin<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+ geom_flat_violin()#position =position_nudge(x = 0.0, y = 0))
-violin<-violin+ coord_cartesian(ylim = c(min(data$ERD), max(data$ERD)))#coord_flip()
+#violin<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+ geom_flat_violin()#position =position_nudge(x = 0.0, y = 0))
+#violin<-violin+ coord_cartesian(ylim = c(min(data$ERD), max(data$ERD)))#coord_flip()
+
 #violin + simple
-mu <- ddply(data$ERD, "condition", summarise, grp.mean=mean(ERD))
-med <- ddply(data$ERD, "condition", summarise, grp.median= median(ERD))
+mu <- ddply(data, "condition", summarise, grp.mean=mean(ERD))
+med <- ddply(data, "condition", summarise, grp.median= median(ERD))
 violin<-ggplot(data, aes(x=ERD,fill = condition)) +
   geom_density(alpha=0.4)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=condition),
@@ -85,3 +84,7 @@ ggdraw() +
 #FINAL
 #plot_grid(t, box,violin, labels = "AUTO", rel_widths = c(1, 0.2,0.2))
 plot_grid(t, box,violin, labels = c('A', 'B','C'), label_size = 12, ncol = 3, rel_widths = c(0.45, 0.12,0.25))
+
+
+
+32
