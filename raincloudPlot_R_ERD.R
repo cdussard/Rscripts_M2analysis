@@ -128,28 +128,33 @@ violin<-violin+theme(axis.title.y = element_blank(),axis.line=element_blank(),ax
 ListFigs <- list("indiv" = t, "boxplot" = box,"distrib"=violin)
 return(ListFigs)
 }
+finalFigure<-function(listeRainCloud)
+{
+  ListFigs<-listeRainCloud
+  legendSujets <- get_legend(
+    # create some space to the left of the legend
+    ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))
+  )
+  legendConditions<- get_legend(
+    ListFigs$distrib + theme(legend.justification = "top")
+  )
+  
+  ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")
+  ListFigs$distrib<-ListFigs$distrib + guides(fill = "none",col = "none")
+  
+  # add the legend to the row we made earlier. Give it one-third of 
+  # the width of one plot (via rel_widths).
+  
+  fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3, rel_widths = c(0.45, 0.1,0.25))
+  
+  figLegende<-plot_grid(legendConditions,legendSujets,n_col=2)
+  figLegende
+  figGlobale<-plot_grid(fig,figLegende,n_col=2,rel_widths = c(1, 0.2),rel_heights = c(1,0.002))
+  return(figGlobale)
+}
 
 ListFigs <-figureRainCloudPlot(ANOVA_12_15Hz_C3_short,P23)
-legendSujets <- get_legend(
-  # create some space to the left of the legend
-  ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))
-)
-legendConditions<- get_legend(
-  ListFigs$distrib + theme(legend.justification = "top")
-)
-
-ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")
-ListFigs$distrib<-ListFigs$distrib + guides(fill = "none",col = "none")
-
-# add the legend to the row we made earlier. Give it one-third of 
-# the width of one plot (via rel_widths).
-
-fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3, rel_widths = c(0.45, 0.1,0.25))
-fig
-
-figLegende<-plot_grid(legendConditions,legendSujets,n_col=2)
-figLegende
-figGlobale<-plot_grid(fig,figLegende,n_col=2,rel_widths = c(1, 0.2),rel_heights = c(1,0.002))
-figGlobale
+finalFig<-finalFigure(ListFigs)
+finalFig
 #ajouter une legende avec les num de sujets
 
