@@ -75,7 +75,7 @@ for (i in 0:12){
 
   condition<-data_longmodif$condition
   age<-data_longmodif$age
-  numSujet<-data_longmodif$num_sujet
+  sujet<-data_longmodif$num_sujet
   genre<-data_longmodif$genre
   freqVibrIllusion<-data_longmodif$freq_vib_illusion
   seuilERD<-data_longmodif$seuilERD
