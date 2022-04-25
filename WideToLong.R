@@ -53,7 +53,6 @@ utils::View(data_long)
 #on essaie de le faire une a la fois, sauver dans une col et recommencer
 test<-data.frame(matrix(NA, nrow = 69, ncol = 0))
 nbValeurs<-13#length(colonnesRassemblees)
-listeColonnesRassemblees<-list()
 data_long<-data_final_wide
 for (i in 0:12){
   print(i)
@@ -67,7 +66,7 @@ for (i in 0:12){
       cols = colARassembler, names_to = c("condition"), values_to = nouvelleCol,names_repair="minimal")
   valueColonne<-data_longmodif[nouvelleCol]
   print(valueColonne)
-  append(listeColonnesRassemblees,valueColonne)
+  test <- cbind(test, valueColonne)
   #marchait avant que j'ajoute ça
   data_longmodif$condition<-as.factor(data_longmodif$condition)
   levels(data_longmodif$condition)[levels(data_longmodif$condition)=="pendule_learnability"] <- "pendule"
@@ -75,8 +74,14 @@ for (i in 0:12){
   levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainIllusion_learnability"] <- "mainIllusion"
 
   conditionColonne<-data_longmodif$condition
-  test <- cbind(test, valueColonne)
-  
-}
+  age<-data_longmodif$age
+  numSujet<-data_longmodif$num_sujet
+  genre<-data_longmodif$genre
+  freqVibrIllusion<-data_longmodif$freq_vib_illusion
+  seuilERD<-data_longmodif$seuilERD
+  }
 
 dataLongFINAL<-cbind(test,conditionColonne)
+dataLongFINAL<-cbind(dataLongFINAL,numSujet,age,genre,freqVibrIllusion,seuilERD)
+
+
