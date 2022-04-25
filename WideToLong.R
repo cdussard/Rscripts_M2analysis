@@ -4,68 +4,6 @@ library(readr)
 data_final_wide <- read_csv("//l2export/iss02.cenir/analyse/meeg/BETAPARK/code/R_SCRIPTS/Rscripts_M2analysis/data/data_final.csv")
 data_final_wide$medianBeta_mainSeule<-as.double(data_final_wide$medianBeta_mainSeule)
 data_final_wide$medianBeta_pendule<-as.double(data_final_wide$medianBeta_pendule)
-
-gathercols <- c("logPendule", "logMainSeule", "logMainIllusion")
-keycol <- "condition"
-valuecol <- "log ERD median"
-data_final_wide$num_sujet <- factor(data_final_wide$num_sujet)
-
-dataERD_long<-gather_(data_final_wide, keycol, valuecol, gathercols)
-
-#rename correctely
-# Rename factor names from "logPendule"to "pendule" and "second"
-dataERD_long$condition<-as.factor(dataERD_long$condition)
-levels(dataERD_long$condition)[levels(dataERD_long$condition)=="logPendule"] <- "pendule"
-levels(dataERD_long$condition)[levels(dataERD_long$condition)=="logMainSeule"] <- "main"
-levels(dataERD_long$condition)[levels(dataERD_long$condition)=="logMainIllusion"] <- "mainIllusion"
-
-# Sort by subject first, then by condition
-#data_long <- data_long[order(data_long$subject, data_long$condition), ]
-#data_long
-
-# on peut essayer pivot_longer
-#il faut specifier les colonnes a rassembler
-# newData <- data_final_wide %>%
-#   pivot_longer(
-#     cols = -c(num_sujet,age,genre,freq_vib_illusion,a_euFBvibration_mainIllusion,nbDeFBVibration,'2FB_testes','3FBtestes',seuilERD), names_to = c("Type", "Measure"),
-#     names_sep = "[^[:alnum:]]+",
-#     values_drop_na = FALSE)
-# newData
-
-#on peut dire celle qu'on ne veut pas rassembler avec le -
-
-#essayons col par col deja
- colonnesRassemblees<-c("logERDmedian","agencySelfMoy","AgencyOtherMoy","AmplitudeMvtMoy",
-                        "nbCyclesFB","aEuFBvisuel","nbEssaisFB","medianBeta","EmbodimentMoy","SuccessMoy",
-                        "DifficultyMoy","SatisfactionMoy","easinessFB","learnabilityFB")
-newData <- data_final_wide %>%
-  pivot_longer(
-    cols = logERD, names_to = c("condition"), values_to = "logERDmedian")
-newData$condition<-as.factor(newData$condition)
-levels(newData$condition)[levels(newData$condition)=="logPendule"] <- "pendule"
-levels(newData$condition)[levels(newData$condition)=="logMainSeule"] <- "main"
-levels(newData$condition)[levels(newData$condition)=="logMainIllusion"] <- "mainIllusion"
-utils::View(newData)
-newDataERD<-newData
-utils::View(newDataERD)
-
-newData <- newData %>%
-  pivot_longer(
-    cols =agencySelf, names_to = c("condition"), values_to = "agencySelfMoy",
-    names_repair="minimal")#minimal allows duplicate
-    
-newData$condition<-as.factor(newData$condition)
-levels(newData$condition)[levels(newData$condition)==agencySelf[1]] <- "pendule"
-levels(newData$condition)[levels(newData$condition)==agencySelf[2]] <- "main"
-levels(newData$condition)[levels(newData$condition)==agencySelf[3]] <- "mainIllusion"
-utils::View(newData)
-#pour supprimer la colonne # , -1
-newDataERDAgency<-newData
-
-
-
-
-
 # #try to iterate over this
 colonnesRassemblees<-c("logERDmedian","agencySelfMoy","AgencyOtherMoy","AmplitudeMvtMoy",
                        "nbCyclesFB","aEuFBvisuel","nbEssaisFB","medianBeta","SuccessMoy",#"EmbodimentMoy"
@@ -113,7 +51,7 @@ utils::View(data_long)
 
 
 #on essaie de le faire une a la fois, sauver dans une col et recommencer
-test<-data.frame(matrix(NA, nrow = 69, ncol = 1))
+test<-data.frame(matrix(NA, nrow = 69, ncol = 0))
 nbValeurs<-13#length(colonnesRassemblees)
 listeColonnesRassemblees<-list()
 data_long<-data_final_wide
@@ -131,14 +69,14 @@ for (i in 0:12){
   print(valueColonne)
   append(listeColonnesRassemblees,valueColonne)
   #marchait avant que j'ajoute ça
-  # data_longmodif$condition<-as.factor(data_longmodif)
-  # levels(data_longmodif$condition)[levels(data_longmodif$condition)=="pendule_learnability"] <- "pendule"
-  # levels(data_longmodif$condition)[levels(data_longmodif$condition)=="main_learnability"] <- "main"
-  # levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainIllusion_learnability"] <- "mainIllusion"
-  # 
+  data_longmodif$condition<-as.factor(data_longmodif$condition)
+  levels(data_longmodif$condition)[levels(data_longmodif$condition)=="pendule_learnability"] <- "pendule"
+  levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainSeule_learnability"] <- "main"
+  levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainIllusion_learnability"] <- "mainIllusion"
+
   conditionColonne<-data_longmodif$condition
   test <- cbind(test, valueColonne)
   
 }
 
-test<-cbind(test,conditionColonne)
+dataLongFINAL<-cbind(test,conditionColonne)
