@@ -73,7 +73,7 @@ for (i in 0:12){
   levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainSeule_learnability"] <- "main"
   levels(data_longmodif$condition)[levels(data_longmodif$condition)=="mainIllusion_learnability"] <- "mainIllusion"
 
-  conditionColonne<-data_longmodif$condition
+  condition<-data_longmodif$condition
   age<-data_longmodif$age
   numSujet<-data_longmodif$num_sujet
   genre<-data_longmodif$genre
