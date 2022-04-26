@@ -28,25 +28,25 @@ ListeColonnesA_rassembler <- list(logERD,agencySelf,agencyOther,meanMvt,nbCycles
                nbEssaisFB,medianBeta,success,difficulty,satisfaction,
                easinessFB,learnabilityFB  )#embodiment
 
-nbValeurs<-13#length(colonnesRassemblees)
-data_long<-data_final_wide
-for (i in 0:12){
-  print(i)
-  #paste("condition",i)
-  colARassembler<-ListeColonnesA_rassembler[[i+1]]
-  print(colARassembler)
-  nouvelleCol<-colonnesRassemblees[i:i+1]
-  print(nouvelleCol)
-  data_long <- data_long %>%
-    pivot_longer(
-      cols = colARassembler, names_to = c("condition"), values_to = nouvelleCol,names_repair="minimal")
-  #print(data_long$condition)
-
-#change col value
-  data_long$condition<-as.factor(data_long$condition)
-
-}
-utils::View(data_long)
+# nbValeurs<-13#length(colonnesRassemblees)
+# data_long<-data_final_wide
+# for (i in 0:12){
+#   print(i)
+#   #paste("condition",i)
+#   colARassembler<-ListeColonnesA_rassembler[[i+1]]
+#   print(colARassembler)
+#   nouvelleCol<-colonnesRassemblees[i:i+1]
+#   print(nouvelleCol)
+#   data_long <- data_long %>%
+#     pivot_longer(
+#       cols = colARassembler, names_to = c("condition"), values_to = nouvelleCol,names_repair="minimal")
+#   #print(data_long$condition)
+# 
+# #change col value
+#   data_long$condition<-as.factor(data_long$condition)
+# 
+# }
+# utils::View(data_long)
 #ça marche mais en fait ça fait 3 millions de lignes donc c'est pas trop viable
 
 
@@ -81,7 +81,7 @@ for (i in 0:12){
   seuilERD<-data_longmodif$seuilERD
   }
 
-dataLongFINAL<-cbind(test,conditionColonne)
-dataLongFINAL<-cbind(dataLongFINAL,numSujet,age,genre,freqVibrIllusion,seuilERD)
+dataLongFINAL<-cbind(test,condition)
+dataLongFINAL<-cbind(dataLongFINAL,sujet,age,genre,freqVibrIllusion,seuilERD)
 
 

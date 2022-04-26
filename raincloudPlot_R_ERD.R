@@ -4,6 +4,7 @@ library("plyr")
 library("dplyr")
 library(Polychrome)
 library(cowplot)
+#j'ai recup les data du M2data sur le bureau
 ANOVA_12_15Hz_C3_short <- read_csv("//l2export/iss02.cenir/analyse/meeg/BETAPARK/code/PYTHON_SCRIPTS/M2data_analysis/analyse_M2/data/Jasp_anova/ANOVA_12_15Hz_C3_short_med.csv")
 
 #raincloud plot
@@ -23,40 +24,38 @@ P23 <- as.vector(t(matrix(P23, ncol=1)))
 swatch(P23)
 names(P23) <- NULL
 
-figureRainCloudPlot <- function(data_ToUse,palette) #palette = P23
-  
+figureRainCloudPlot <- function(data_ToUse,varToPlot,varCondition,varSujet,palette) #palette = P23
 {
   data<-data_ToUse
-  data$condition <- factor(data_ToUse$condition , levels=c("pendule", "main", "mainIllusion"))
+  #data[varCondition] <- factor(data_ToUse[condition] , levels=c("pendule", "main", "mainIllusion"))
   #data$condition <- as.integer(factor(ANOVA_12_15Hz_C3_short$condition))
-  t<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+
-    scale_x_discrete( expand = c(0.06, 0.01),labels=levels(data$condition))+
-    geom_jitter(data=data,size=5,aes(color=factor(sujet)),alpha = 0.8,width = 0.01)+
+  t<-ggplot(data,aes(x=get(varCondition),y=get(varToPlot),group = get(varCondition),fill=get(varCondition)))+
+    scale_x_discrete( expand = c(0.06, 0.01),labels=levels(data[varCondition]))+
+    geom_jitter(data=data,size=5,aes(color=factor(get(varSujet))),alpha = 0.8,width = 0.01)+
     guides(fill = "none")+#,col = "none")+# a mettre tout a droite,col="none")
     #theme(legend.position = "none")+
-    geom_line(data=data,size=1.05,aes(group=sujet,color=factor(sujet)))+
+    geom_line(data=data,size=1.05,aes(group=get(varSujet),color=factor(get(varSujet))))+
     #geom_boxplot( width = .15,  outlier.shape = NA,alpha=0.0,position =position_nudge(x = 0, y = 0) )
     #scale_color_manual(values=glasbey(23))+
     scale_color_manual(values = P23)+
-    theme_bw()+theme_classic()
+    theme_bw()+theme_classic()+
+    xlab(varCondition) + ylab(varToPlot)
 # 
 #boxplot
-data$condition <- factor(data_ToUse$condition , levels=c("pendule", "main", "mainIllusion"))
-box<-ggplot(data,aes(x=condition,y=ERD,group = condition,fill=condition))+
-  geom_boxplot(data=data,aes(fill=condition),width = 0.8,  outlier.shape = NA,alpha=0.4 )+
+box<-ggplot(data,aes(x=get(varCondition),y=get(varToPlot),group = get(varCondition),fill=get(varCondition)))+
+  geom_boxplot(data=data,aes(fill=get(varCondition)),width = 0.7,  outlier.shape = NA,alpha=0.5 )+
   theme_bw()+
   theme_classic()+
-  scale_x_discrete( expand = c(0.25, 0.0),labels=levels(data$condition))+
+  scale_x_discrete( expand = c(0.25, 0.0),labels=levels(data[varCondition]))+
   theme(legend.position = "none",axis.line=element_blank())+theme(legend.position = "none")
 box<-box+theme(axis.title.y = element_blank(),axis.title.x = element_blank(),axis.text.y=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank())
 # 
-data$condition <- factor(data_ToUse$condition , levels=c("pendule", "main", "mainIllusion"))
 #violin + simple
-mu <- ddply(data, "condition", summarise, grp.mean=mean(ERD))
-med <- ddply(data, "condition", summarise, grp.median= median(ERD))
-violin<-ggplot(data, aes(x=ERD,fill = condition)) +
-  geom_density(alpha=0.4)+
-  geom_vline(data=mu, aes(xintercept=grp.mean, color=condition),
+mu <- ddply(data, varCondition, summarise, grp.mean=mean(get(varToPlot)))
+med <- ddply(data, varCondition, summarise, grp.median= median(get(varToPlot)))
+violin<-ggplot(data, aes(x=get(varToPlot),fill = get(varCondition))) +
+  geom_density(alpha=0.5,lwd = 0.7)+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=get(varCondition)),
              linetype="dashed")+
   coord_flip()+
   theme_bw()
@@ -79,14 +78,12 @@ finalFigure<-function(listeRainCloud)
   ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")
   ListFigs$distrib<-ListFigs$distrib + guides(fill = "none",col = "none")
   
-  # add the legend to the row we made earlier. Give it one-third of 
-  # the width of one plot (via rel_widths).
+  fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3,
+                 rel_widths = c(0.3, 0.1,0.1),rel_heights = c(1,1,0.2))
   
-  fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3, rel_widths = c(0.45, 0.1,0.25))
-  
-  figLegende<-plot_grid(legendConditions,legendSujets,n_col=2)
+  figLegende<-plot_grid(legendConditions,legendSujets,n_col=2,rel_heights = c(1,0.5))
   figLegende
-  figGlobale<-plot_grid(fig,figLegende,n_col=2,rel_widths = c(1, 0.2),rel_heights = c(1,0.002))
+  figGlobale<-plot_grid(fig,figLegende,n_col=2,rel_widths = c(1, 0.4),rel_heights = c(1,0.0005))
   return(figGlobale)
 }
 
@@ -105,7 +102,8 @@ finalFig
 
 
 data_OV<- read_csv("C:/Users/claire.dussard/OneDrive - ICM/Bureau/MNE_VS_OV/REFAIT/plot_OV_seul/plot_OV_data.csv")
-ListFigs <-figureRainCloudPlot(data_OV,P23)
+data_OV<-data_OV[data_OV$calcul=="OV",]
+ListFigs <-figureRainCloudPlot(data_OV,"ERD","condition","sujet",P23)
 finalFig<-finalFigure(ListFigs)
 finalFig
 
@@ -116,3 +114,15 @@ get_anova_table(res.aov)
 
 res.aov <- anova_test(data = data_OV, dv = ERD, wid = sujet, within = condition)
 get_anova_table(res.aov)
+
+#figure agency Self
+data<-ANOVA_12_15Hz_C3_short
+data<-data_OV
+varToPlot<-"ERD"
+varCondition<-"condition"
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"logERDmedian","condition","sujet",P23)
+finalFig<-finalFigure(ListFigs)
+finalFig
+
+
