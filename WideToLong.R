@@ -5,9 +5,9 @@ data_final_wide <- read_csv("//l2export/iss02.cenir/analyse/meeg/BETAPARK/code/R
 data_final_wide$medianBeta_mainSeule<-as.double(data_final_wide$medianBeta_mainSeule)
 data_final_wide$medianBeta_pendule<-as.double(data_final_wide$medianBeta_pendule)
 # #try to iterate over this
-colonnesRassemblees<-c("logERDmedian","agencySelfMoy","AgencyOtherMoy","AmplitudeMvtMoy",
-                       "nbCyclesFB","aEuFBvisuel","nbEssaisFB","medianBeta","SuccessMoy",#"EmbodimentMoy"
-                       "DifficultyMoy","SatisfactionMoy","easinessFB","learnabilityFB"
+colonnesRassemblees<-c("logERDmedian","agencySelfMoy","agencyOtherMoy","amplitudeMvtMoy",
+                       "nbCyclesFB","aEuFBvisuel","nbEssaisFB","medianBeta","successMoy",#"EmbodimentMoy"
+                       "difficultyMoy","satisfactionMoy","easinessFB","learnabilityFB"
                       )
 
 logERD <- c("logPendule","logMainSeule","logMainIllusion")

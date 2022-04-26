@@ -79,7 +79,7 @@ finalFigure<-function(listeRainCloud)
   ListFigs$distrib<-ListFigs$distrib + guides(fill = "none",col = "none")
   
   fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3,
-                 rel_widths = c(0.3, 0.1,0.1),rel_heights = c(1,1,0.2))
+                 rel_widths = c(0.4, 0.1,0.1),rel_heights = c(1,1,0.2))
   
   figLegende<-plot_grid(legendConditions,legendSujets,n_col=2,rel_heights = c(1,0.5))
   figLegende
@@ -118,6 +118,45 @@ get_anova_table(res.aov)
 varCondition<-"condition"
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"logERDmedian","condition","sujet",P23)
-finalFig<-finalFigure(ListFigs)
-finalFig
+finalFig_logERDOV<-finalFigure(ListFigs)
+finalFig_logERDOV
 
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencySelfMoy","condition","sujet",P23)
+finalFig_agencyMoy<-finalFigure(ListFigs)
+finalFig_agencyMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencyOtherMoy","condition","sujet",P23)
+finalFig_agencyOtherMoy<-finalFigure(ListFigs)
+finalFig_agencyOtherMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"amplitudeMvtMoy","condition","sujet",P23)
+finalFig_amplitudeMvtMoy<-finalFigure(ListFigs)
+finalFig_amplitudeMvtMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"nbCyclesFB","condition","sujet",P23)
+finalFig_nbCyclesFB<-finalFigure(ListFigs)
+finalFig_nbCyclesFB
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"medianBeta","condition","sujet",P23)
+finalFig_medianBeta<-finalFigure(ListFigs)
+finalFig_medianBeta
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"successMoy","condition","sujet",P23)
+finalFig_successMoy<-finalFigure(ListFigs)
+finalFig_successMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"difficultyMoy","condition","sujet",P23)
+finalFig_difficultyMoy<-finalFigure(ListFigs)
+finalFig_difficultyMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"satisfactionMoy","condition","sujet",P23)
+finalFig_satisfactionMoy<-finalFigure(ListFigs)
+finalFig_satisfactionMoy
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"easinessFB","condition","sujet",P23)
+finalFig_easinessFB<-finalFigure(ListFigs)
+finalFig_easinessFB
+
+ListFigs <-figureRainCloudPlot(dataLongFINAL,"learnabilityFB","condition","sujet",P23)
+finalFig_learnabilityFB<-finalFigure(ListFigs)
+finalFig_learnabilityFB
