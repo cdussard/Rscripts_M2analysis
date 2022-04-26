@@ -39,7 +39,7 @@ figureRainCloudPlot <- function(data_ToUse,varToPlot,varCondition,varSujet,palet
     #scale_color_manual(values=glasbey(23))+
     scale_color_manual(values = P23)+
     theme_bw()+theme_classic()+
-    xlab(varCondition) + ylab(varToPlot)
+    xlab(varCondition) + ylab(varToPlot)#+ labs(fill = varSujet)
 # 
 #boxplot
 box<-ggplot(data,aes(x=get(varCondition),y=get(varToPlot),group = get(varCondition),fill=get(varCondition)))+
@@ -47,7 +47,7 @@ box<-ggplot(data,aes(x=get(varCondition),y=get(varToPlot),group = get(varConditi
   theme_bw()+
   theme_classic()+
   scale_x_discrete( expand = c(0.25, 0.0),labels=levels(data[varCondition]))+
-  theme(legend.position = "none",axis.line=element_blank())+theme(legend.position = "none")
+  theme(legend.position = "none",axis.line=element_blank())+theme(legend.position = "none")#+ labs(fill = varCondition)
 box<-box+theme(axis.title.y = element_blank(),axis.title.x = element_blank(),axis.text.y=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank())
 # 
 #violin + simple
@@ -57,7 +57,7 @@ violin<-ggplot(data, aes(x=get(varToPlot),fill = get(varCondition))) +
   geom_density(alpha=0.5,lwd = 0.7)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=get(varCondition)),
              linetype="dashed")+
-  coord_flip()+
+  coord_flip()+#+ labs(fill = varCondition)+
   theme_bw()
 violin<-violin+theme_classic()#remove box around plot
 violin<-violin+theme(axis.title.y = element_blank(),axis.line=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.text.x=element_blank(),axis.title.x = element_blank(),axis.ticks.y=element_blank())
@@ -69,10 +69,10 @@ finalFigure<-function(listeRainCloud)
   ListFigs<-listeRainCloud
   legendSujets <- get_legend(
     # create some space to the left of the legend
-    ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))
+    ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))+  labs(col="sujet")
   )
   legendConditions<- get_legend(
-    ListFigs$distrib + theme(legend.justification = "top")
+    ListFigs$distrib + theme(legend.justification = "top")+  labs(col="condition",fill="condition")
   )
   
   ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")
@@ -115,14 +115,9 @@ get_anova_table(res.aov)
 res.aov <- anova_test(data = data_OV, dv = ERD, wid = sujet, within = condition)
 get_anova_table(res.aov)
 
-#figure agency Self
-data<-ANOVA_12_15Hz_C3_short
-data<-data_OV
-varToPlot<-"ERD"
 varCondition<-"condition"
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"logERDmedian","condition","sujet",P23)
 finalFig<-finalFigure(ListFigs)
 finalFig
-
 
