@@ -27,7 +27,11 @@ names(P23) <- NULL
 figureRainCloudPlot <- function(data_ToUse,varToPlot,varCondition,varSujet,palette) #palette = P23
 {
   data<-data_ToUse
-  #data[varCondition] <- factor(data_ToUse[condition] , levels=c("pendule", "main", "mainIllusion"))
+  varCond<-get(varCondition)
+  levels(varCond)<-c("pendulum", "handAlone", "handWithVibrations")
+  print(levels(varCond))
+  data[varCondition]<-varCond
+  print(levels(data[varCondition]))
   #data$condition <- as.integer(factor(ANOVA_12_15Hz_C3_short$condition))
   t<-ggplot(data,aes(x=get(varCondition),y=get(varToPlot),group = get(varCondition),fill=get(varCondition)))+
     scale_x_discrete( expand = c(0.06, 0.01),labels=levels(data[varCondition]))+
@@ -64,18 +68,19 @@ violin<-violin+theme(axis.title.y = element_blank(),axis.line=element_blank(),ax
 ListFigs <- list("indiv" = t, "boxplot" = box,"distrib"=violin)
 return(ListFigs)
 }
-finalFigure<-function(listeRainCloud)
+finalFigure<-function(listeRainCloud,ylab,xlab)
 {
   ListFigs<-listeRainCloud
   legendSujets <- get_legend(
     # create some space to the left of the legend
-    ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))+  labs(col="sujet")
+    ListFigs$indiv + theme(legend.justification = "bottom",legend.position = c(-0.5, .0))+  labs(col="participant n°")
   )
   legendConditions<- get_legend(
-    ListFigs$distrib + theme(legend.justification = "top")+  labs(col="condition",fill="condition")
+    ListFigs$distrib + theme(legend.justification = "top")+  labs(col=xlab,fill=xlab)
   )
   
-  ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")
+  ListFigs$indiv<-ListFigs$indiv + guides(fill = "none",col = "none")+ xlab(xlab)+ylab(ylab)# a mettre ds 1 variable
+
   ListFigs$distrib<-ListFigs$distrib + guides(fill = "none",col = "none")
   
   fig<-plot_grid(ListFigs$indiv, ListFigs$boxplot,ListFigs$distrib, labels = c('A', 'B','C'), label_size = 12, ncol = 3,
@@ -101,11 +106,11 @@ finalFig<-finalFigure(ListFigs)
 finalFig
 
 
-data_OV<- read_csv("C:/Users/claire.dussard/OneDrive - ICM/Bureau/MNE_VS_OV/REFAIT/plot_OV_seul/plot_OV_data.csv")
-data_OV<-data_OV[data_OV$calcul=="OV",]
-ListFigs <-figureRainCloudPlot(data_OV,"ERD","condition","sujet",P23)
-finalFig<-finalFigure(ListFigs)
-finalFig
+# data_OV<- read_csv("C:/Users/claire.dussard/OneDrive - ICM/Bureau/MNE_VS_OV/REFAIT/plot_OV_seul/plot_OV_data.csv")
+# data_OV<-data_OV[data_OV$calcul=="OV",]
+# ListFigs <-figureRainCloudPlot(data_OV,"ERD","condition","sujet",P23)
+# finalFig<-finalFigure(ListFigs,"8-30Hz median log(ERD/ERS)","Feedback condition")
+# finalFig
 
 #anova
 library(rstatix)
@@ -118,7 +123,7 @@ get_anova_table(res.aov)
 varCondition<-"condition"
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"logERDmedian","condition","sujet",P23)
-finalFig_logERDOV<-finalFigure(ListFigs)
+finalFig_logERDOV<-finalFigure(ListFigs,"8-30Hz median log(ERD/ERS)","Feedback condition")
 finalFig_logERDOV
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencySelfMoy","condition","sujet",P23)
