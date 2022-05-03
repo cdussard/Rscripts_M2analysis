@@ -127,7 +127,7 @@ finalFig_logERDOV<-finalFigure(ListFigs,"8-30Hz median log(ERD/ERS)","Feedback c
 finalFig_logERDOV
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencySelfMoy","condition","sujet",P23)
-finalFig_agencyMoy<-finalFigure(ListFigs)
+finalFig_agencyMoy<-finalFigure(ListFigs,"Reported agency","Feedback condition")
 finalFig_agencyMoy
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencyOtherMoy","condition","sujet",P23)
