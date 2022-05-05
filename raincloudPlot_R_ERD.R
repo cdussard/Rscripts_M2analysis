@@ -131,19 +131,19 @@ finalFig_agencyMoy<-finalFigure(ListFigs,"Reported agency","Feedback condition")
 finalFig_agencyMoy
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"agencyOtherMoy","condition","sujet",P23)
-finalFig_agencyOtherMoy<-finalFigure(ListFigs)
+finalFig_agencyOtherMoy<-finalFigure(ListFigs,"Reported external causal attribution","Feedback condition")
 finalFig_agencyOtherMoy
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"amplitudeMvtMoy","condition","sujet",P23)
-finalFig_amplitudeMvtMoy<-finalFigure(ListFigs)
+finalFig_amplitudeMvtMoy<-finalFigure(ListFigs,"Mean feedback movement amplitude","Feedback condition")
 finalFig_amplitudeMvtMoy
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"nbCyclesFB","condition","sujet",P23)
-finalFig_nbCyclesFB<-finalFigure(ListFigs)
+finalFig_nbCyclesFB<-finalFigure(ListFigs,"Number of successful trials","Feedback condition")
 finalFig_nbCyclesFB
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"medianBeta","condition","sujet",P23)
-finalFig_medianBeta<-finalFigure(ListFigs)
+finalFig_medianBeta<-finalFigure(ListFigs,"Median beta power","Feedback condition")
 finalFig_medianBeta
 
 ListFigs <-figureRainCloudPlot(dataLongFINAL,"successMoy","condition","sujet",P23)
