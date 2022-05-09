@@ -83,5 +83,11 @@ for (i in 0:12){
 
 dataLongFINAL<-cbind(test,condition)
 dataLongFINAL<-cbind(dataLongFINAL,sujet,age,genre,freqVibrIllusion,seuilERD)
-
-
+#test normalite data
+hist(dataLongFINAL$logERDmedian)
+dataPendule<-dataLongFINAL[dataLongFINAL$condition=="pendule",]
+dataMain<-dataLongFINAL[dataLongFINAL$condition=="main",]
+dataMainIllusion<-dataLongFINAL[dataLongFINAL$condition=="mainIllusion",]
+shapiro.test(dataPendule$logERDmedian)
+shapiro.test(dataMain$logERDmedian)
+shapiro.test(dataMainIllusion$logERDmedian)
